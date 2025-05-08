@@ -6,9 +6,9 @@ public class Blade : MonoBehaviour
     private Camera mainCamera;
     private Collider bladeCollider;
     private TrailRenderer bladeTrail;
-    //Bi?n ki?m tra có ?ang chém không
+    //Bi?n ki?m tra cï¿½ ?ang chï¿½m khï¿½ng
     private bool slicing;
-    //Bi?n h??ng chém 
+    //Bi?n h??ng chï¿½m 
     public Vector3 direction { get; private set; }
     //Bi?n l?u v?n t?c di chuy?n dao th?p nh?t
     public float minSliceVelocity = 0.01f;
@@ -16,17 +16,17 @@ public class Blade : MonoBehaviour
 
     private void Awake()
     {
-        //L?y Các ??i t??ng c?n thi?t
+        //L?y Cï¿½c ??i t??ng c?n thi?t
         mainCamera = Camera.main;
         bladeCollider = GetComponent<Collider>();
         bladeTrail = GetComponentInChildren<TrailRenderer>();
     }
-    //Hàm g?i khi Script enable
+    //Hï¿½m g?i khi Script enable
     private void OnEnable()
     {
         StopSlicing();
     }
-    //Hàm g?i khi Script disable
+    //Hï¿½m g?i khi Script disable
     private void OnDisable()
     {
         StopSlicing();
@@ -34,39 +34,45 @@ public class Blade : MonoBehaviour
 
     private void Update()
     {
-        //L?y s? ki?n ghi nh?n chu?t trái xu?ng ta s? g?i hàm StartSclicing()
+        //L?y s? ki?n ghi nh?n chu?t trï¿½i xu?ng ta s? g?i hï¿½m StartSclicing()
         if (Input.GetMouseButtonDown(0)){
             StartSlicing();
         }
-        //L?y s? ki?n ghi th? chu?t trái ra s? g?i hàm StopSlicing()
+        //L?y s? ki?n ghi th? chu?t trï¿½i ra s? g?i hï¿½m StopSlicing()
         else if (Input.GetMouseButtonUp(0)){
             StopSlicing();
         }
-        //Ho?c khi ta ?è chu?t trái xu?ng thì bi?n slicing s? ?úng và g?i hàm ContinueSlicing();
+        //Ho?c khi ta ?ï¿½ chu?t trï¿½i xu?ng thï¿½ bi?n slicing s? ?ï¿½ng vï¿½ g?i hï¿½m ContinueSlicing();
         else if (slicing){
             ContinueSlicing();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            GameManager gameManager = FindObjectOfType<GameManager>();
+            gameManager.QuitGame();
         }
     }
 
     private void StartSlicing()
     {
-        //Ta l?y v? trí c?a con chu?t trên màn hình mainCamera và ch?nh chi?u z là 0
+        //Ta l?y v? trï¿½ c?a con chu?t trï¿½n mï¿½n hï¿½nh mainCamera vï¿½ ch?nh chi?u z lï¿½ 0
         Vector3 newPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         newPosition.z = 0f;
-        //Thay ??i v? trí c?a blade hi?n là v? trí ?ã l?y
+        //Thay ??i v? trï¿½ c?a blade hi?n lï¿½ v? trï¿½ ?ï¿½ l?y
         transform.position = newPosition;
-        //Ch?nh Collider, trail c?a Blade enable và bi?n slicing thành true
+        //Ch?nh Collider, trail c?a Blade enable vï¿½ bi?n slicing thï¿½nh true
         slicing = true;
         bladeCollider.enabled = true;
 
         bladeTrail.enabled = true;
-        //Clear ?? cho ghi ?n v? trí m?i s? không t?o 1 v?t dài
+        //Clear ?? cho ghi ?n v? trï¿½ m?i s? khï¿½ng t?o 1 v?t dï¿½i
         bladeTrail.Clear();
     }
 
     private void StopSlicing()
     {
-        //D?ng chém thì ??i bi?n slicing thành false và các bi?n collider và trail disable
+        //D?ng chï¿½m thï¿½ ??i bi?n slicing thï¿½nh false vï¿½ cï¿½c bi?n collider vï¿½ trail disable
         slicing = false;
         bladeCollider.enabled = false;
         bladeTrail.enabled = false;
@@ -74,16 +80,16 @@ public class Blade : MonoBehaviour
 
     private void ContinueSlicing()
     {
-        //Ta l?y v? trí c?a con chu?t trên màn hình mainCamera và ch?nh chi?u z là 0
+        //Ta l?y v? trï¿½ c?a con chu?t trï¿½n mï¿½n hï¿½nh mainCamera vï¿½ ch?nh chi?u z lï¿½ 0
         Vector3 newPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         newPosition.z = 0f;
-        //Tính Vector h??ng direction
+        //Tï¿½nh Vector h??ng direction
         direction = newPosition - transform.position;
-        //Tính t?c ?? blade trong kho?ng th?i gian chém v?i ?? l?n h??ng chia cho th?i gian trôi qua
+        //Tï¿½nh t?c ?? blade trong kho?ng th?i gian chï¿½m v?i ?? l?n h??ng chia cho th?i gian trï¿½i qua
         float velocity = direction.magnitude / Time.deltaTime;
-        //Khi t?c ?? th?p h?n bi?n minSliceVelocity thì collider s? t?t(Ví d? dao ??ng yên 1 ch?)
+        //Khi t?c ?? th?p h?n bi?n minSliceVelocity thï¿½ collider s? t?t(Vï¿½ d? dao ??ng yï¿½n 1 ch?)
         bladeCollider.enabled = velocity > minSliceVelocity;
-        //Thay ??i v? trí hi?n t?i thành v? trí m?i
+        //Thay ??i v? trï¿½ hi?n t?i thï¿½nh v? trï¿½ m?i
         transform.position = newPosition;
     }
 }
